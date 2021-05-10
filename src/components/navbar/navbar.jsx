@@ -1,8 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./navbar.css";
 import { auth } from "../../firebase/firebase";
 import { Button, Modal, TextField } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
 const Navbar = () => {
     const [open, setOpen] = useState(false);
     const [email, setEmail] = useState("");
@@ -16,7 +15,8 @@ const Navbar = () => {
             if (authUser) {
                 setUser(authUser);
                 if (authUser.displayName) {
-                } else {
+                } 
+                else {
                     return authUser.updateProfile({
                         displayName: username,
                     });

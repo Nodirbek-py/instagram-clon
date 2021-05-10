@@ -1,23 +1,28 @@
-import React, { Suspense } from "react";
+import React from "react";
 import Post from "./components/post/post";
-import { db } from "./firebase/firebase";
+import { db, auth } from "./firebase/firebase";
 import Navbar from "./components/navbar/navbar";
+import Upload from './components/upload/upload'
 class App extends React.Component {
     state = {
         posts: [],
         fetching: false,
+        user:null
     };
     componentDidMount() {
         this.setState({
             fetching: true,
         });
-        db.collection("posts").onSnapshot((snapshot) => {
+        db.collection("posts").orderBy('timestamp', 'asc').onSnapshot((snapshot) => {
             this.setState({
                 posts: snapshot.docs.map((doc) => {
                     return doc.data();
                 }),
                 fetching: false,
             });
+        });
+        auth.onAuthStateChanged((authUser) => {
+            this.setState({user:authUser.email})
         });
     }
     render() {
@@ -40,7 +45,11 @@ class App extends React.Component {
                         );
                     })
                 )}
-                {console.log(this.state.posts[0])}
+                {
+                    this.state.user ? 
+                    <Upload user={this.state.user}/> :
+                    null
+                }
             </React.Fragment>
         );
     }
